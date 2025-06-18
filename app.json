@@ -16,7 +16,9 @@
       "usesAppleSignIn": true,
       "supportsTablet": true,
       "bundleIdentifier": "dev.privy.example",
-      "associatedDomains": ["webcredentials:<your-associated-domain>"],
+      "associatedDomains": [
+        "webcredentials:<your-associated-domain>"
+      ],
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
@@ -31,9 +33,8 @@
       "package": "dev.privy.example"
     },
     "extra": {
-      "privyAppId": "<your-privy-app-id>",
-      "privyClientId": "<your-privy-app-client-id>",
-      "passkeyAssociatedDomain": "https://<your-associated-domain>"
+      "privyAppId": "cmbj8sxm0004qi90md9agy81k",
+      "privyClientId": "client-WY6MAr84ud81KZf6GJUmBo65Dh4NgBKMGGFpJPPocsg8J"
     },
     "plugins": [
       "expo-router",
