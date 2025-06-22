@@ -1,19 +1,20 @@
+import { useEmbeddedSolanaWallet } from '@privy-io/expo';
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
 interface ProfileBarProps {
   avatar: string;
-  username: string;
   onPress: () => void;
 }
 
-export default function ProfileBar({ avatar, username, onPress }: ProfileBarProps) {
+export default function ProfileBar({ avatar, onPress }: ProfileBarProps) {
+  const { wallets } = useEmbeddedSolanaWallet()
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onPress}>
         <Image source={{ uri: avatar }} style={styles.avatar} />
       </TouchableOpacity>
-      <Text style={styles.username}>{username}</Text>
+      <Text style={styles.username}>{wallets?.[0].address.slice(0, 2)}...{wallets?.[0].address.slice(-3)}</Text>
     </View>
   );
 }

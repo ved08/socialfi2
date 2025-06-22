@@ -8,7 +8,7 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/adaptive-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -34,7 +34,11 @@
     },
     "extra": {
       "privyAppId": "cmbj8sxm0004qi90md9agy81k",
-      "privyClientId": "client-WY6MAr84ud81KZf6GJUmBo65Dh4NgBKMGGFpJPPocsg8J"
+      "privyClientId": "client-WY6MAr84ud81KZf6GJUmBo65Dh4NgBKMGGFpJPPocsg8J",
+      "router": {},
+      "eas": {
+        "projectId": "a9beddca-075f-43a9-b80d-3d303c7d6e69"
+      }
     },
     "plugins": [
       "expo-router",

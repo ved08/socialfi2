@@ -8,11 +8,11 @@ import ProfileBar from '../../components/ProfileBar';
 import ProfileDrawer from '../../components/ProfileDrawer';
 
 const mockUser = {
-  username: 'soldjer77',
-  avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-  following: 123,
-  followers: 456,
-  twitterUrl: 'https://twitter.com/',
+    username: 'soldjer77',
+    avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+    following: 123,
+    followers: 456,
+    twitterUrl: 'https://twitter.com/',
 };
 
 export default function WalletScreen() {
@@ -20,6 +20,7 @@ export default function WalletScreen() {
     const [activeTab, setActiveTab] = useState('Tokens');
 
     // Mock token data
+
     const tokens: TokenData[] = [
         {
             id: '1',
@@ -57,7 +58,6 @@ export default function WalletScreen() {
         <SafeAreaView style={styles.container} edges={['top', 'left', 'right', 'bottom']}>
             <ProfileBar
                 avatar={mockUser.avatar}
-                username={mockUser.username}
                 onPress={() => setDrawerVisible(true)}
             />
             <ProfileDrawer

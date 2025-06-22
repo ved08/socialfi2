@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 export type TradeFeedItem = {
   id: string;
@@ -21,9 +22,25 @@ export type TradeFeedItem = {
   holding: number;
   userMC: number;
   apedIn: number;
+  tokenMint: string;
+  timestamp: string;
 };
 
 export default function TradeFeedCard({ item }: { item: TradeFeedItem }) {
+  const router = useRouter();
+
+  const handleApeIn = () => {
+    router.push({
+      pathname: '/token/[id]',
+      params: {
+        id: item.tokenMint,
+        name: item.asset,
+        symbol: item.asset,
+        price: item.bought.toString(),
+        decimals: 9 // Default decimals, can be adjusted if needed
+      }
+    });
+  };
   return (
     <View style={styles.card}>
       {/* Asset and MC */}
@@ -34,9 +51,21 @@ export default function TradeFeedCard({ item }: { item: TradeFeedItem }) {
           <Text style={styles.apedInText}>{item.apedIn} aped in</Text>
         </View>
       </View>
-      {/* Trade Action */}
-      <Text style={styles.boughtText}>Bought ${item.bought.toFixed(2)}</Text>
-      <Text style={styles.description}>{item.description}</Text>
+      {/* Trade Action and Timestamp */}
+      <View style={styles.tradeInfoRow}>
+        <View>
+          <Text style={styles.boughtText}>Bought ${item.bought.toFixed(2)}</Text>
+          <Text style={styles.description}>{item.description}</Text>
+        </View>
+        <Text style={styles.timestamp}>
+          {new Date(item.timestamp).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          })}
+        </Text>
+      </View>
       {/* Chart Placeholder */}
       <View style={styles.chartPlaceholder}>
         <Ionicons name="stats-chart" size={32} color="#888" />
@@ -62,7 +91,10 @@ export default function TradeFeedCard({ item }: { item: TradeFeedItem }) {
         </View>
       </View>
       {/* Ape In Button */}
-      <TouchableOpacity style={styles.apeInButton}>
+      <TouchableOpacity
+        style={styles.apeInButton}
+        onPress={handleApeIn}
+      >
         <Text style={styles.apeInButtonText}>Ape In</Text>
       </TouchableOpacity>
     </View>
@@ -74,7 +106,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#181A20',
     borderRadius: 18,
     padding: 18,
-    marginBottom: 18,
+    marginBottom: 16,
+    width: '100%',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -113,12 +146,22 @@ const styles = StyleSheet.create({
     color: '#7FFF8E',
     fontWeight: 'bold',
     fontSize: 16,
-    marginTop: 8,
   },
   description: {
     color: '#fff',
     fontSize: 14,
-    marginVertical: 4,
+    marginTop: 2,
+  },
+  tradeInfoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 4,
+  },
+  timestamp: {
+    color: '#888',
+    fontSize: 12,
+    marginLeft: 8,
   },
   chartPlaceholder: {
     backgroundColor: '#23242A',

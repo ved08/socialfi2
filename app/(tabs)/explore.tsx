@@ -3,9 +3,12 @@ import ExploreSearchBar from '@/components/ExploreSearchBar';
 import ExploreTokenList, { ExploreTokenData } from '@/components/ExploreTokenList';
 import ProfileBar from '@/components/ProfileBar';
 import ProfileDrawer from '@/components/ProfileDrawer';
-import React, { useState } from 'react';
+import api from '@/services/api';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { tokenService } from "@/services/api";
+import { useRouter } from 'expo-router';
 
 const mockUser = {
   username: 'soldjer77',
@@ -23,33 +26,35 @@ const initialFilters = [
   { label: '24h', active: false },
 ];
 
+
+
 const mockTokens: ExploreTokenData[] = [
   {
-    id: '1', symbol: 'ART', name: 'ART', mc: '$356.18K', price: '$0.03562', percent: '--%', icon: require('@/assets/images/react-logo.png'), trending: true, verified: false,
+    id: '1', symbol: 'ART', name: 'ART', mc: '$356.18K', price: '$0.03562', icon: require('@/assets/images/react-logo.png'), decimals: 6,
   },
   {
-    id: '2', symbol: 'aura', name: 'aura', mc: '$119.77M', price: '$0.1243', percent: '-34.4%', icon: require('@/assets/images/react-logo.png'), trending: false, verified: true,
+    id: '2', symbol: 'aura', name: 'aura', mc: '$119.77M', price: '$0.1243', icon: require('@/assets/images/react-logo.png'), decimals: 6,
   },
   {
-    id: '3', symbol: 'crapto', name: 'crapto', mc: '$107.85K', price: '$0.031078', percent: '--%', icon: require('@/assets/images/react-logo.png'), trending: false, verified: false,
+    id: '3', symbol: 'crapto', name: 'crapto', mc: '$107.85K', price: '$0.031078', icon: require('@/assets/images/react-logo.png'), decimals: 6,
   },
   {
-    id: '4', symbol: 'PI', name: 'PI', mc: '$803.15K', price: '$0.03832', percent: '--%', icon: require('@/assets/images/react-logo.png'), trending: false, verified: false,
+    id: '4', symbol: 'PI', name: 'PI', mc: '$803.15K', price: '$0.03832', icon: require('@/assets/images/react-logo.png'), decimals: 6,
   },
   {
-    id: '5', symbol: 'ppp', name: 'ppp', mc: '$221.99K', price: '$0.032220', percent: '--%', icon: require('@/assets/images/react-logo.png'), trending: false, verified: false,
+    id: '5', symbol: 'ppp', name: 'ppp', mc: '$221.99K', price: '$0.032220', icon: require('@/assets/images/react-logo.png'), decimals: 6,
   },
   {
-    id: '6', symbol: 'lmeow', name: 'lmeow', mc: '$558.70K', price: '$0.035594', percent: '+65.6%', icon: require('@/assets/images/react-logo.png'), trending: false, verified: false,
+    id: '6', symbol: 'lmeow', name: 'lmeow', mc: '$558.70K', price: '$0.035594', icon: require('@/assets/images/react-logo.png'), decimals: 6,
   },
   {
-    id: '7', symbol: 'CRYPTO', name: 'CRYPTO', mc: '$23.86K', price: '$0.042386', percent: '-99.6%', icon: require('@/assets/images/react-logo.png'), trending: false, verified: false,
+    id: '7', symbol: 'CRYPTO', name: 'CRYPTO', mc: '$23.86K', price: '$0.042386', icon: require('@/assets/images/react-logo.png'), decimals: 6,
   },
   {
-    id: '8', symbol: 'USDP', name: 'USDP', mc: '$18.00M', price: '$0.01800', percent: '-54.8%', icon: require('@/assets/images/react-logo.png'), trending: false, verified: false,
+    id: '8', symbol: 'USDP', name: 'USDP', mc: '$18.00M', price: '$0.01800', icon: require('@/assets/images/react-logo.png'), decimals: 6,
   },
   {
-    id: '9', symbol: 'moonpig', name: 'moonpig', mc: '$?', price: '$0.01082', percent: '-41.4%', icon: require('@/assets/images/react-logo.png'), trending: false, verified: true,
+    id: '9', symbol: 'moonpig', name: 'moonpig', mc: '$?', price: '$0.01082', icon: require('@/assets/images/react-logo.png'), decimals: 6,
   },
 ];
 
@@ -58,12 +63,48 @@ export default function ExploreScreen() {
   const [search, setSearch] = useState('');
   const [selectedTab, setSelectedTab] = useState(0);
   const [filters, setFilters] = useState(initialFilters);
-  const [tokens, setTokens] = useState(mockTokens);
+  const [tokens, setTokens] = useState<ExploreTokenData[]>(mockTokens);
+  const router = useRouter();
 
   const handleTabPress = (idx: number) => setSelectedTab(idx);
+
+  const handleTokenPress = (token: ExploreTokenData) => {
+    router.push({
+      pathname: '/token/[id]',
+      params: {
+        id: token.id,
+        name: token.name,
+        symbol: token.symbol,
+        price: token.price,
+        decimals: token.decimals,
+        daily_volume: token.mc
+      }
+    });
+  };
   const handleFilterPress = (idx: number) => {
     setFilters(filters.map((f, i) => ({ ...f, active: i === idx })));
   };
+
+  useEffect(() => {
+    (async () => {
+      const tokenList = ["JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN", "27G8MtK7VtTcCHkpASjSDdkWWYfoqT6ggEuKidVJidD4", "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263", "Dz9mQ9NzkBcCsuGPFJ3r1bS4wgqKMHBPiVuniW8Mbonk", "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump"]
+      let data: ExploreTokenData[] = []
+      for (let i = 0; i < tokenList.length; i++) {
+        const { address, symbol, name, logoURI, daily_volume, decimals } = await tokenService.getTokenData(tokenList[i])
+        data.push({
+          id: address,
+          symbol: symbol,
+          name: name,
+          mc: daily_volume,
+          price: "1",
+          icon: logoURI, // This will be a string URL from the API
+          decimals,
+        })
+      }
+      console.log(data)
+      setTokens(data)
+    })()
+  }, [])
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
@@ -72,7 +113,6 @@ export default function ExploreScreen() {
         {/* ProfileBar (common top bar with drawer) */}
         <ProfileBar
           avatar={mockUser.avatar}
-          username={mockUser.username}
           onPress={() => setDrawerVisible(true)}
         />
         <ProfileDrawer
@@ -108,6 +148,7 @@ export default function ExploreScreen() {
         {/* Token List */}
         <ExploreTokenList
           data={tokens}
+          onTokenPress={handleTokenPress}
         />
       </View>
     </SafeAreaView>
