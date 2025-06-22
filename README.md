@@ -1,6 +1,6 @@
-# Social Trading Platform
+# socialfi - Social Trading Platform
 
-A social trading platform where users can share their trading positions, discover new opportunities, and connect with other traders. Built with React Native, Expo, and Solana blockchain integration.
+**socialfi** is a social trading platform where users can share their trading positions, discover new opportunities, and connect with other traders. Built with React Native, Expo, and Solana blockchain integration, socialfi makes it easy to share and discover profitable trading strategies.
 
 > **Note:** This is the frontend repository. The backend server code can be found at [socialfi-backend](https://github.com/ved08/socialfi-backend).
 
@@ -41,8 +41,9 @@ yarn install
 Create a `.env` file in the root directory with the following variables:
 
 ```env
-BACKEND_URL=https://your-backend-url.vercel.app
-# Add any other environment variables here
+# After starting the backend server (see step 5), update this URL with your local backend URL
+# For example: http://localhost:3000 or your deployed backend URL
+BACKEND_URL=http://localhost:3000
 ```
 
 ### 4. Start the Development Server
